@@ -65,6 +65,11 @@ server {
     ssl_certificate {{ $ssl.Certificate }};
     ssl_certificate_key {{ $ssl.CertificateKey }};
 
+    {{ if $s.ClientCa }}
+    ssl_verify_client on;
+    ssl_client_certificate /etc/nginx/secrets/default-{{ $s.ClientCa }};
+    {{ end }}
+
         {{ if $ssl.Ciphers }}
     ssl_ciphers {{ $ssl.Ciphers }};
         {{ end }}

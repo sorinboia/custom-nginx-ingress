@@ -1858,7 +1858,39 @@ func (lbc *LoadBalancerController) createVirtualServer(virtualServer *conf_v1.Vi
 		} else {
 			virtualServerEx.TLSSecret = secret
 		}
-	}
+    }
+
+    if virtualServer.Spec.TLS != nil && virtualServer.Spec.TLS.ClientCa != "" {
+        secretKey := virtualServer.Namespace + "/" + virtualServer.Spec.TLS.ClientCa
+        secret, err := lbc.getAndValidateSecret(secretKey)
+        if err != nil {
+            glog.Warningf("Error trying to get the secret %v for VirtualServer %v: %v", secretKey, virtualServer.Name, err)
+        } else {
+            virtualServerEx.ClientCa = secret
+        }
+    }
+
+    if virtualServer.Spec.TLS != nil && virtualServer.Spec.TLS.UpstreamSsl != "" {
+        secretKey := virtualServer.Namespace + "/" + virtualServer.Spec.TLS.UpstreamSsl
+        secret, err := lbc.getAndValidateSecret(secretKey)
+        if err != nil {
+            glog.Warningf("Error trying to get the secret %v for VirtualServer %v: %v", secretKey, virtualServer.Name, err)
+        } else {
+            virtualServerEx.UpstreamSsl = secret
+        }
+    }
+
+    if virtualServer.Spec.TLS != nil && virtualServer.Spec.TLS.UpstreamCa != "" {
+        secretKey := virtualServer.Namespace + "/" + virtualServer.Spec.TLS.UpstreamCa
+        secret, err := lbc.getAndValidateSecret(secretKey)
+        if err != nil {
+            glog.Warningf("Error trying to get the secret %v for VirtualServer %v: %v", secretKey, virtualServer.Name, err)
+        } else {
+            virtualServerEx.UpstreamCa = secret
+        }
+    }
+
+
 
 	endpoints := make(map[string][]string)
 	externalNameSvcs := make(map[string]bool)

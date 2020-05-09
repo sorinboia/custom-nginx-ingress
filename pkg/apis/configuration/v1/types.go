@@ -19,6 +19,7 @@ type VirtualServer struct {
 // VirtualServerSpec is the spec of the VirtualServer resource.
 type VirtualServerSpec struct {
 	Host      string     `json:"host"`
+	Test      string     `json:"test"`
 	TLS       *TLS       `json:"tls"`
 	Upstreams []Upstream `json:"upstreams"`
 	Routes    []Route    `json:"routes"`
@@ -171,6 +172,9 @@ type ErrorPageRedirect struct {
 type TLS struct {
 	Secret   string       `json:"secret"`
 	Redirect *TLSRedirect `json:"redirect"`
+	ClientCa string       `json:"clientca"`
+	UpstreamSsl string    `json:"upstreamssl"`
+	UpstreamCa string     `json:"upstreamca"`
 }
 
 // TLSRedirect defines a redirect for a TLS.

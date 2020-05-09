@@ -36,6 +36,9 @@ type Server struct {
 	StatusZone                string
 	ProxyProtocol             bool
 	SSL                       *SSL
+	ClientCa                  string
+	UpstreamSsl               string
+	UpstreamCa                string
 	ServerTokens              string
 	RealIPHeader              string
 	SetRealIPFrom             []string

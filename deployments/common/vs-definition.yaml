@@ -242,6 +242,12 @@ spec:
                       type: boolean
                 secret:
                   type: string
+                clientca:
+                  type: string
+                upstreamssl:
+                  type: string
+                upstream-ca:
+                  type: string
             upstreams:
               type: array
               items:

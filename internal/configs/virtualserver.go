@@ -33,6 +33,9 @@ type VirtualServerEx struct {
 	VirtualServer       *conf_v1.VirtualServer
 	Endpoints           map[string][]string
 	TLSSecret           *api_v1.Secret
+	ClientCa            *api_v1.Secret
+	UpstreamSsl         *api_v1.Secret
+	UpstreamCa          *api_v1.Secret
 	VirtualServerRoutes []*conf_v1.VirtualServerRoute
 	ExternalNameSvcs    map[string]bool
 }
@@ -329,6 +332,9 @@ func (vsc *virtualServerConfigurator) GenerateVirtualServerConfig(virtualServerE
 			StatusZone:                virtualServerEx.VirtualServer.Spec.Host,
 			ProxyProtocol:             vsc.cfgParams.ProxyProtocol,
 			SSL:                       ssl,
+            ClientCa:                  virtualServerEx.VirtualServer.Spec.TLS.ClientCa,
+            UpstreamSsl:               virtualServerEx.VirtualServer.Spec.TLS.UpstreamSsl,
+            UpstreamCa:                virtualServerEx.VirtualServer.Spec.TLS.UpstreamCa,
 			ServerTokens:              vsc.cfgParams.ServerTokens,
 			SetRealIPFrom:             vsc.cfgParams.SetRealIPFrom,
 			RealIPHeader:              vsc.cfgParams.RealIPHeader,

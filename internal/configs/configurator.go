@@ -171,9 +171,22 @@ func (cnf *Configurator) addOrUpdateOpenTracingTracerConfig(content string) erro
 
 func (cnf *Configurator) addOrUpdateVirtualServer(virtualServerEx *VirtualServerEx) (Warnings, error) {
 	tlsPemFileName := ""
+
 	if virtualServerEx.TLSSecret != nil {
 		tlsPemFileName = cnf.addOrUpdateTLSSecret(virtualServerEx.TLSSecret)
 	}
+	if virtualServerEx.ClientCa != nil {
+    	cnf.addOrUpdateTLSSecret(virtualServerEx.ClientCa)
+    }
+
+    if virtualServerEx.UpstreamSsl != nil {
+        cnf.addOrUpdateTLSSecret(virtualServerEx.UpstreamSsl)
+    }
+
+    if virtualServerEx.UpstreamCa != nil {
+        cnf.addOrUpdateTLSSecret(virtualServerEx.UpstreamCa)
+    }
+
 	vsc := newVirtualServerConfigurator(cnf.cfgParams, cnf.isPlus, cnf.IsResolverConfigured(), cnf.staticCfgParams.TLSPassthrough)
 	vsCfg, warnings := vsc.GenerateVirtualServerConfig(virtualServerEx, tlsPemFileName)
 

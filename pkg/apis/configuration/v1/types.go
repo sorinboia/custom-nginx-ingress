@@ -79,6 +79,7 @@ type HealthCheck struct {
 	SendTimeout    string       `json:"send-timeout"`
 	Headers        []Header     `json:"headers"`
 	StatusMatch    string       `json:"statusMatch"`
+	SslCertificate string       `json:"sslcertificate"`
 }
 
 // Header defines an HTTP Header.

@@ -280,6 +280,8 @@ spec:
                       HealthChecks.
                     type: object
                     properties:
+                      sslcertificate:
+                        type: string
                       connect-timeout:
                         type: string
                       enable:

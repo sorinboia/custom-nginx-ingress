@@ -456,6 +456,10 @@ func generateHealthCheck(upstream conf_v1.Upstream, upstreamName string, cfgPara
 		hc.Match = generateStatusMatchName(upstreamName)
 	}
 
+	if upstream.HealthCheck.SslCertificate != "" {
+    	hc.SslCertificate = upstream.HealthCheck.SslCertificate
+    }
+
 	return hc
 }
 

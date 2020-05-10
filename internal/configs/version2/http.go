@@ -134,6 +134,7 @@ type HealthCheck struct {
 	ProxySendTimeout    string
 	Headers             map[string]string
 	Match               string
+	SslCertificate      string
 }
 
 // TLSRedirect defines a redirect in a Server.

@@ -45,6 +45,8 @@ spec:
                 description: Route defines a route.
                 type: object
                 properties:
+                  sslcertificate:
+                    type: string
                   action:
                     description: Action defines an action.
                     type: object

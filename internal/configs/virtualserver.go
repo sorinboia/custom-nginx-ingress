@@ -277,7 +277,7 @@ func (vsc *virtualServerConfigurator) GenerateVirtualServerConfig(virtualServerE
 		} else {
 			upstreamName := virtualServerUpstreamNamer.GetNameForUpstream(r.Action.Pass)
 			upstream := crUpstreams[upstreamName]
-			loc := generateLocation(r.Path, upstreamName, upstream, r.Action, vsc.cfgParams, r.ErrorPages, false, errorPageIndex)
+			loc := generateLocation(r.Path, upstreamName, upstream, r.Action, vsc.cfgParams, r.ErrorPages, false, errorPageIndex, r.SslCertificate)
 			locations = append(locations, loc)
 		}
 	}
@@ -316,7 +316,7 @@ func (vsc *virtualServerConfigurator) GenerateVirtualServerConfig(virtualServerE
 			} else {
 				upstreamName := upstreamNamer.GetNameForUpstream(r.Action.Pass)
 				upstream := crUpstreams[upstreamName]
-				loc := generateLocation(r.Path, upstreamName, upstream, r.Action, vsc.cfgParams, errorPages, false, errorPageIndex)
+				loc := generateLocation(r.Path, upstreamName, upstream, r.Action, vsc.cfgParams, errorPages, false, errorPageIndex, r.SslCertificate)
 				locations = append(locations, loc)
 			}
 		}
@@ -578,7 +578,7 @@ func generateReturnBlock(text string, code int, defaultCode int) *version2.Retur
 }
 
 func generateLocation(path string, upstreamName string, upstream conf_v1.Upstream, action *conf_v1.Action,
-	cfgParams *ConfigParams, errorPages []conf_v1.ErrorPage, internal bool, errPageIndex int) version2.Location {
+	cfgParams *ConfigParams, errorPages []conf_v1.ErrorPage, internal bool, errPageIndex int, sslCertificate string) version2.Location {
 	if action.Redirect != nil {
 		returnBlock := generateReturnBlock(action.Redirect.URL, action.Redirect.Code, 301)
 		return generateLocationForReturnBlock(path, cfgParams.LocationSnippets, returnBlock, "")
@@ -593,11 +593,11 @@ func generateLocation(path string, upstreamName string, upstream conf_v1.Upstrea
 		return generateLocationForReturnBlock(path, cfgParams.LocationSnippets, returnBlock, defaultType)
 	}
 
-	return generateLocationForProxying(path, upstreamName, upstream, cfgParams, errorPages, internal, errPageIndex)
+	return generateLocationForProxying(path, upstreamName, upstream, cfgParams, errorPages, internal, errPageIndex, sslCertificate)
 }
 
 func generateLocationForProxying(path string, upstreamName string, upstream conf_v1.Upstream,
-	cfgParams *ConfigParams, errorPages []conf_v1.ErrorPage, internal bool, errPageIndex int) version2.Location {
+	cfgParams *ConfigParams, errorPages []conf_v1.ErrorPage, internal bool, errPageIndex int, sslCertificate string) version2.Location {
 	return version2.Location{
 		Path:                     generatePath(path),
 		Internal:                 internal,
@@ -617,6 +617,7 @@ func generateLocationForProxying(path string, upstreamName string, upstream conf
 		ProxyInterceptErrors:     generateProxyInterceptErrors(errorPages),
 		HasKeepalive:             upstreamHasKeepalive(upstream, cfgParams),
 		ErrorPages:               generateErrorPages(errPageIndex, errorPages),
+		SslCertificate:           sslCertificate,
 	}
 }
 
@@ -664,7 +665,7 @@ func generateSplits(splits []conf_v1.Split, upstreamNamer *upstreamNamer, crUpst
 		path := fmt.Sprintf("/%vsplits_%d_split_%d", internalLocationPrefix, scIndex, i)
 		upstreamName := upstreamNamer.GetNameForUpstream(s.Action.Pass)
 		upstream := crUpstreams[upstreamName]
-		loc := generateLocation(path, upstreamName, upstream, s.Action, cfgParams, errorPages, true, errPageIndex)
+		loc := generateLocation(path, upstreamName, upstream, s.Action, cfgParams, errorPages, true, errPageIndex, "")
 		locations = append(locations, loc)
 	}
 
@@ -772,7 +773,7 @@ func generateMatchesConfig(route conf_v1.Route, upstreamNamer *upstreamNamer, cr
 			path := fmt.Sprintf("/%vmatches_%d_match_%d", internalLocationPrefix, index, i)
 			upstreamName := upstreamNamer.GetNameForUpstream(m.Action.Pass)
 			upstream := crUpstreams[upstreamName]
-			loc := generateLocation(path, upstreamName, upstream, m.Action, cfgParams, errorPages, true, errPageIndex)
+			loc := generateLocation(path, upstreamName, upstream, m.Action, cfgParams, errorPages, true, errPageIndex, "")
 			locations = append(locations, loc)
 		}
 	}
@@ -786,7 +787,7 @@ func generateMatchesConfig(route conf_v1.Route, upstreamNamer *upstreamNamer, cr
 		path := fmt.Sprintf("/%vmatches_%d_default", internalLocationPrefix, index)
 		upstreamName := upstreamNamer.GetNameForUpstream(route.Action.Pass)
 		upstream := crUpstreams[upstreamName]
-		loc := generateLocation(path, upstreamName, upstream, route.Action, cfgParams, errorPages, true, errPageIndex)
+		loc := generateLocation(path, upstreamName, upstream, route.Action, cfgParams, errorPages, true, errPageIndex, "")
 		locations = append(locations, loc)
 	}
 

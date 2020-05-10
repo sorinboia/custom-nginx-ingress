@@ -106,6 +106,7 @@ type Route struct {
 	Splits     []Split     `json:"splits"`
 	Matches    []Match     `json:"matches"`
 	ErrorPages []ErrorPage `json:"errorPages"`
+	SslCertificate string  `json:"sslcertificate"`
 }
 
 // Action defines an action.

@@ -82,6 +82,7 @@ type Location struct {
 	DefaultType              string
 	Return                   *Return
 	ErrorPages               []ErrorPage
+	SslCertificate           string
 }
 
 // SplitClient defines a split_clients.

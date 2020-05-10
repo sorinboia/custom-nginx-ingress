@@ -186,6 +186,13 @@ server {
         proxy_next_upstream {{ $l.ProxyNextUpstream }};
         proxy_next_upstream_timeout {{ $l.ProxyNextUpstreamTimeout }};
         proxy_next_upstream_tries {{ $l.ProxyNextUpstreamTries }};
+
+            {{ if $l.SslCertificate }}
+        proxy_ssl_certificate /etc/nginx/secrets/default-{{ $l.SslCertificate }};
+        proxy_ssl_certificate_key /etc/nginx/secrets/default-{{ $l.SslCertificate }};
+            {{ end }}
+
+
         {{ end }}
     }
     {{ end }}

@@ -67,7 +67,7 @@ server {
 
     {{ if $s.ClientCa }}
     ssl_verify_client on;
-    ssl_client_certificate /etc/nginx/secrets/default-{{ $s.ClientCa }};
+    ssl_client_certificate /etc/nginx/secrets/{{ $s.ClientCa }};
     {{ end }}
 
         {{ if $ssl.Ciphers }}
@@ -117,8 +117,8 @@ server {
             fails={{ $hc.Fails }} passes={{ $hc.Passes }}{{ if $hc.Match }} match={{ $hc.Match }}{{ end }};
 
         {{ if $hc.SslCertificate }}
-        proxy_ssl_certificate /etc/nginx/secrets/default-{{ $hc.SslCertificate }};
-        proxy_ssl_certificate_key /etc/nginx/secrets/default-{{ $hc.SslCertificate }};
+        proxy_ssl_certificate /etc/nginx/secrets/{{ $hc.SslCertificate }};
+        proxy_ssl_certificate_key /etc/nginx/secrets/{{ $hc.SslCertificate }};
         {{ end }}
     }
     {{ end }}
@@ -194,8 +194,8 @@ server {
         proxy_next_upstream_tries {{ $l.ProxyNextUpstreamTries }};
 
             {{ if $l.SslCertificate }}
-        proxy_ssl_certificate /etc/nginx/secrets/default-{{ $l.SslCertificate }};
-        proxy_ssl_certificate_key /etc/nginx/secrets/default-{{ $l.SslCertificate }};
+        proxy_ssl_certificate /etc/nginx/secrets/{{ $l.SslCertificate }};
+        proxy_ssl_certificate_key /etc/nginx/secrets/{{ $l.SslCertificate }};
             {{ end }}
 
 
